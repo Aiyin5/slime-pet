@@ -1,0 +1,88 @@
+name: Build SlimePet (Windows exe + macOS dmg)
+
+# 推送到 main/master，或在 Actions 页面手动 Run workflow 时触发
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+          - os: macos-latest
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 安装依赖
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pyinstaller
+
+      # ---------------- Windows: 单 exe ----------------
+      - name: 构建 Windows exe
+        if: runner.os == 'Windows'
+        run: |
+          python make_ico.py
+          python -m PyInstaller --noconfirm --clean --onefile --windowed `
+            --name SlimePet `
+            --icon assets/slime.ico `
+            --add-data "web;web" `
+            main.py
+
+      - name: 上传 Windows exe
+        if: runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SlimePet-windows-exe
+          path: dist/SlimePet.exe
+
+      # ---------------- macOS: .app + dmg ----------------
+      - name: 生成 icns 图标
+        if: runner.os == 'macOS'
+        run: |
+          python make_icon_png.py
+          ICONSET=assets/slime.iconset
+          mkdir -p $ICONSET
+          sips -z 16 16     assets/slime_1024.png --out $ICONSET/icon_16x16.png
+          sips -z 32 32     assets/slime_1024.png --out $ICONSET/icon_16x16@2x.png
+          sips -z 32 32     assets/slime_1024.png --out $ICONSET/icon_32x32.png
+          sips -z 64 64     assets/slime_1024.png --out $ICONSET/icon_32x32@2x.png
+          sips -z 128 128   assets/slime_1024.png --out $ICONSET/icon_128x128.png
+          sips -z 256 256   assets/slime_1024.png --out $ICONSET/icon_128x128@2x.png
+          sips -z 256 256   assets/slime_1024.png --out $ICONSET/icon_256x256.png
+          sips -z 512 512   assets/slime_1024.png --out $ICONSET/icon_256x256@2x.png
+          sips -z 512 512   assets/slime_1024.png --out $ICONSET/icon_512x512.png
+          cp assets/slime_1024.png $ICONSET/icon_512x512@2x.png
+          iconutil -c icns $ICONSET -o assets/slime.icns
+
+      - name: 构建 macOS app
+        if: runner.os == 'macOS'
+        run: |
+          python -m PyInstaller --noconfirm --clean --windowed --name SlimePet \
+            --icon assets/slime.icns \
+            --add-data "web:web" \
+            main.py
+
+      - name: 生成 dmg
+        if: runner.os == 'macOS'
+        run: |
+          hdiutil create -volname SlimePet \
+            -srcfolder dist/SlimePet.app \
+            -ov -format UDZO dist/SlimePet-mac.dmg
+
+      - name: 上传 macOS dmg
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: SlimePet-mac-dmg
+          path: dist/SlimePet-mac.dmg
