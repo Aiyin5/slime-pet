@@ -1,0 +1,155 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* HTML hidden 属性必须生效，防止 display 规则把它覆盖 */
+[hidden] { display: none !important; }
+
+:root {
+  --primary: #3ec98b;
+  --primary-dark: #26b578;
+  --primary-soft: #e6f8f0;
+  --ink: #233029;
+  --ink-soft: #6b7d73;
+  --line: #e7efe9;
+  --bg: #f3f7f5;
+  --danger: #ff6b75;
+  --warn: #f5a623;
+  --radius: 14px;
+  --shadow: 0 6px 24px rgba(46, 120, 86, .10);
+}
+
+body {
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { max-width: 860px; margin: 0 auto; padding: 28px 20px 60px; }
+
+/* 顶栏 */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 22px;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand h1 { font-size: 22px; letter-spacing: .5px; }
+.subtitle { font-size: 13px; color: var(--ink-soft); margin-top: 3px; }
+
+.brand-slime {
+  width: 46px; height: 38px; position: relative; flex: none;
+  background: radial-gradient(circle at 35% 25%, #c8f6df 0%, #6fe0aa 55%, #3ec98b 100%);
+  border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
+  box-shadow: inset -4px -6px 10px rgba(22, 130, 80, .25), 0 4px 8px rgba(46,160,100,.25);
+}
+.brand-eye {
+  position: absolute; top: 14px; width: 7px; height: 9px;
+  background: #20332a; border-radius: 50%;
+}
+.brand-eye.left { left: 13px; }
+.brand-eye.right { right: 13px; }
+
+/* 按钮 */
+.btn {
+  border: 1px solid var(--line); background: #fff; color: var(--ink);
+  padding: 9px 18px; border-radius: 10px; font-size: 14px; cursor: pointer;
+  transition: all .15s;
+}
+.btn:hover { border-color: var(--primary); color: var(--primary-dark); }
+.btn-primary {
+  background: var(--primary); border-color: var(--primary); color: #fff;
+  font-weight: 600; box-shadow: 0 4px 12px rgba(62,201,139,.35);
+}
+.btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); color: #fff; }
+
+/* Tabs */
+.tabs { display: flex; gap: 8px; margin-bottom: 18px; }
+.tab {
+  border: none; background: transparent; padding: 8px 18px; border-radius: 999px;
+  font-size: 14px; color: var(--ink-soft); cursor: pointer;
+}
+.tab.active { background: #fff; color: var(--primary-dark); font-weight: 600; box-shadow: var(--shadow); }
+
+/* 任务卡片 */
+.task-list { display: flex; flex-direction: column; gap: 12px; }
+.task-card {
+  display: flex; gap: 14px; background: #fff; border-radius: var(--radius);
+  padding: 16px 18px; box-shadow: var(--shadow); position: relative;
+  border: 1px solid transparent; transition: border-color .15s;
+}
+.task-card:hover { border-color: var(--line); }
+.task-bar { width: 5px; border-radius: 4px; flex: none; }
+.task-main { flex: 1; min-width: 0; }
+.task-title { font-size: 16px; font-weight: 600; margin-bottom: 6px; word-break: break-all; }
+.task-meta { font-size: 13px; color: var(--ink-soft); display: flex; flex-wrap: wrap; gap: 6px 14px; }
+.task-note {
+  font-size: 13px; color: var(--ink-soft); margin-top: 7px;
+  background: var(--bg); border-radius: 8px; padding: 6px 10px;
+}
+.task-side { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex: none; }
+
+.badge {
+  font-size: 12px; padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+}
+.badge.pending { background: var(--primary-soft); color: var(--primary-dark); }
+.badge.in_progress { background: #fff3e0; color: #e08a00; }
+.badge.completed { background: #eef1ef; color: #8a978f; }
+.badge.expired { background: #ffe9eb; color: #e0525d; }
+
+.card-actions { display: flex; gap: 6px; }
+.mini-btn {
+  border: none; background: transparent; cursor: pointer; font-size: 13px;
+  padding: 4px 8px; border-radius: 7px; color: var(--ink-soft);
+}
+.mini-btn:hover { background: var(--bg); color: var(--ink); }
+.mini-btn.done:hover { color: var(--primary-dark); background: var(--primary-soft); }
+.mini-btn.del:hover { color: var(--danger); #ffeff0; }
+
+.task-card.is-done { opacity: .66; }
+.task-card.is-done .task-title { text-decoration: line-through; }
+
+/* 空状态 */
+.empty { text-align: center; padding: 70px 0; color: var(--ink-soft); }
+.empty p { font-size: 16px; margin: 14px 0 6px; color: var(--ink); }
+.empty span { font-size: 13px; }
+.empty-slime {
+  width: 80px; height: 64px; margin: 0 auto;
+  background: radial-gradient(circle at 35% 25%, #c8f6df, #6fe0aa 60%, #3ec98b);
+  border-radius: 50% 50% 42% 42% / 62% 62% 38% 38%;
+  opacity: .8;
+}
+
+/* 弹窗 */
+.modal-mask {
+  position: fixed; inset:0; background: rgba(30, 50, 40, .35);
+  display: flex; align-items: center; justify-content: center; z-index: 50;
+  backdrop-filter: blur(2px);
+}
+.modal {
+  background: #fff; width: 520px; max-width: calc(100vw - 32px);
+  border-radius: 18px; padding: 22px 24px; box-shadow: 0 20px 60px rgba(0,0,0,.2);
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+.modal-head h2 { font-size: 18px; }
+.icon-btn { border: none; background: transparent; font-size: 24px; cursor: pointer; color: var(--ink-soft); line-height: 1; }
+
+.field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px; flex: 1; }
+.field > span { font-size: 13px; color: var(--ink-soft); }
+.field em { color: var(--danger); font-style: normal; }
+.field input, .field select, .field textarea {
+  border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+  font-size: 14px; font-family: inherit; outline: none; transition: border-color .15s;
+  background: #fff; color: var(--ink);
+}
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); }
+.field textarea { resize: vertical; }
+.field-row { display: flex; gap: 14px; }
+
+.color-picker { display: flex; gap: 9px; align-items: center; height: 40px; }
+.color-dot {
+  width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent;
+  cursor: pointer; padding: 0;
+}
+.color-dot.selected { border-color: #fff; box-shadow: 0 0 0 2px var(--primary); }
+
+.form-error { color: var(--danger); font-size: 13px; margin-bottom: 10px; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; margin-top: 4px; }

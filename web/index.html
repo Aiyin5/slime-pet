@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>史莱姆宠物 · 任务管理</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="page">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-slime">
+        <span class="brand-eye left"></span><span class="brand-eye right"></span>
+      </span>
+      <div>
+        <h1>史莱姆任务管理</h1>
+        <p class="subtitle">桌面大史莱姆的待办清单 · 数据仅保存在本机</p>
+      </div>
+    </div>
+    <button class="btn btn-primary" id="btn-new">+ 新建任务</button>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" data-scope="today">今天</button>
+    <button class="tab" data-scope="all">全部任务</button>
+  </div>
+
+  <main id="task-list" class="task-list"></main>
+
+  <div class="empty" id="empty-state" hidden>
+    <div class="empty-slime"></div>
+    <p>这里还没有任务</p>
+    <span>点击右上角「新建任务」，让史莱姆提醒你</span>
+  </div>
+</div>
+
+<!-- 新建/编辑弹窗 -->
+<div class="modal-mask" id="modal" hidden>
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="modal-title">新建任务</h2>
+      <button class="icon-btn" id="modal-close">×</button>
+    </div>
+    <form id="task-form">
+      <label class="field">
+        <span>任务名称 <em>*</em></span>
+        <input type="text" id="f-title" maxlength="60" placeholder="例如：写项目周报" required>
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>开始时间 <em>*</em></span>
+          <input type="datetime-local" id="f-start" required>
+        </label>
+        <label class="field">
+          <span>结束时间 <em>*</em></span>
+          <input type="datetime-local" id="f-end" required>
+        </label>
+      </div>
+      <div class="field-row">
+        <label class="field">
+          <span>提前提醒</span>
+          <select id="f-remind">
+            <option value="0">到点才提醒</option>
+            <option value="5" selected>提前 5 分钟</option>
+            <option value="10">提前 10 分钟</option>
+            <option value="15">提前 15 分钟</option>
+            <option value="30">提前 30 分钟</option>
+            <option value="60">提前 1 小时</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>标签颜色</span>
+          <div class="color-picker" id="f-color">
+            <button type="button" class="color-dot selected" data-color="#5ed49a" style="background:#5ed49a"></button>
+            <button type="button" class="color-dot" data-color="#57b8ff" style="background:#57b8ff"></button>
+            <button type="button" class="color-dot" data-color="#f7b955" style="background:#f7b955"></button>
+            <button type="button" class="color-dot" data-color="#ff7a85" style="background:#ff7a85"></button>
+            <button type="button" class="color-dot" data-color="#b58cff" style="background:#b58cff"></button>
+          </div>
+        </label>
+      </div>
+      <label class="field">
+        <span>备注</span>
+        <textarea id="f-note" rows="2" maxlength="200" placeholder="可选"></textarea>
+      </label>
+      <p class="form-error" id="form-error" hidden></p>
+      <div class="modal-foot">
+        <button type="button" class="btn" id="modal-cancel">取消</button>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
